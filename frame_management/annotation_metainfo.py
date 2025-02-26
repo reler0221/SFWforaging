@@ -85,7 +85,7 @@ def create_list_of_annotated_frames_by_class(region_attributes_metainfo, class_s
 #%% Run Code
 # Import files
 csv_paths = sorted([os.path.join(folder_with_annotations, f) for f in os.listdir(folder_with_annotations) if f.endswith(filetype)])
-
+print(len(csv_paths))
 
 # Fill region attributes information for all batches
 for filename in csv_paths:
@@ -110,6 +110,18 @@ for variable in categories:
 # Errors
 errors = region_attributes_metainfo[region_attributes_metainfo["error"] != 0]
 print("ERRORS:\n", errors)
+
+#%% pecking
+pecking_annotated_frames=region_attributes_metainfo[region_attributes_metainfo["pecking"] != 0]
+pecking_frame_list = list(pecking_annotated_frames[pecking_annotated_frames["pecking"]=="y"]["filename"])
+pecking_frame_set = set(pecking_frame_list)
+peck_and_nonpeck_frame_set = set(list(pecking_annotated_frames["filename"]))
+
+#%% shade
+shade_annotated_frames=region_attributes_metainfo[region_attributes_metainfo["shade"] != 0]
+shade_frame_list = list(shade_annotated_frames[shade_annotated_frames["shade"]=="y"]["filename"])
+shade_frame_set = set(shade_frame_list)
+shade_and_nonshade_frame_set = set(list(shade_annotated_frames["filename"]))
 
 #%% Get list of annotated frames
 # Full list of annotated frames
