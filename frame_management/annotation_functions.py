@@ -34,15 +34,15 @@ import numpy as np
 import csv
 
 #%% Set environment
-os.chdir("/Users/hyewonjun/UZH/Thesis/")
+#os.chdir("/Users/hyewonjun/UZH/Thesis/")
 
 #%% Parameters
-folder_with_annotations = "annotations"
+folder_with_annotations = "/Volumes/T5 EVO/Foraging HD/only_annotated_frames" #/Users/hyewonjun/UZH/Thesis/annotations
 filetype = ".csv"
-categories = sorted(["pecking", "shade", "substrate", "covered"])
+categories = sorted(["pecking", "shade", "substrate", "covered","blue"])
 colnames = ["filename", "batch", "error", "region_count"] + categories
 response_type_yesno = ["y", "n", "u"] #u: undeterminable
-response_type_substrate = ["b", "v", "l", "g", "p", "d", "r", "s", "t","m" "n"]
+
 
 #%% Initialize summary variables
 total_frames = 0
@@ -61,16 +61,11 @@ def make_clean_df(filename, file, colnames):
     return region_attributes_clean_df
 
 # Fill in region attributes and perform error checking
-def fill_region_att_and_errorcheck(file, categories, region_attributes_clean_df, response_type_substrate, response_type_yesno):
+def fill_region_att_and_errorcheck(file, categories, region_attributes_clean_df, response_type_yesno):
     for i, attributes in enumerate(file["region_attributes"]):
         attributes_dict = eval(attributes)  # Ensure attributes are parsed correctly
         for key, value in attributes_dict.items():
-            if key == "substrate":
-                region_attributes_clean_df.loc[i, key] = value
-                # Error check
-                if value not in response_type_substrate:
-                    region_attributes_clean_df.loc[i, "error"] = key
-            elif key in categories:
+            if key in categories:
                 region_attributes_clean_df.loc[i, key] = value
                 # Error check
                 if value not in response_type_yesno:
@@ -84,14 +79,14 @@ def create_list_of_annotated_frames_by_class(region_attributes_metainfo, class_s
 
 #%% Run Code
 # Import files
-csv_paths = sorted([os.path.join(folder_with_annotations, f) for f in os.listdir(folder_with_annotations) if f.endswith(filetype)])
+csv_paths = sorted([os.path.join(folder_with_annotations, f) for f in os.listdir(folder_with_annotations) if f.endswith(filetype) and not f.startswith(".")])
 print(len(csv_paths))
 
 # Fill region attributes information for all batches
 for filename in csv_paths:
     file = pd.read_csv(filename)
     region_attributes_clean_df = make_clean_df(filename, file, colnames)
-    region_attributes_clean_df = fill_region_att_and_errorcheck(file, categories, region_attributes_clean_df, response_type_substrate, response_type_yesno)
+    region_attributes_clean_df = fill_region_att_and_errorcheck(file, categories, region_attributes_clean_df, response_type_yesno)
     region_attributes_metainfo = pd.concat([region_attributes_metainfo, region_attributes_clean_df], ignore_index=True)
 
 #%% Summary statistics and errors
@@ -114,7 +109,9 @@ print("ERRORS:\n", errors)
 #%% pecking
 pecking_annotated_frames=region_attributes_metainfo[region_attributes_metainfo["pecking"] != 0]
 pecking_frame_list = list(pecking_annotated_frames[pecking_annotated_frames["pecking"]=="y"]["filename"])
+nonpecking_frame_list = list(pecking_annotated_frames[pecking_annotated_frames["pecking"]=="n"]["filename"])
 pecking_frame_set = set(pecking_frame_list)
+nonpecking_frame_set = set(nonpecking_frame_list)
 peck_and_nonpeck_frame_set = set(list(pecking_annotated_frames["filename"]))
 
 #%% shade
@@ -123,6 +120,11 @@ shade_frame_list = list(shade_annotated_frames[shade_annotated_frames["shade"]==
 shade_frame_set = set(shade_frame_list)
 shade_and_nonshade_frame_set = set(list(shade_annotated_frames["filename"]))
 
+#%% blue
+blue_annotated_frames=region_attributes_metainfo[region_attributes_metainfo["blue"] != 0]
+blue_frame_list = list(blue_annotated_frames[blue_annotated_frames["blue"]=="y"]["filename"])
+blue_frame_set = set(blue_frame_list)
+blue_and_nonblue_frame_set = set(list(blue_annotated_frames["filename"]))
 #%% Get list of annotated frames
 # Full list of annotated frames
 filenames_annotated = region_attributes_metainfo[region_attributes_metainfo["region_count"] > 0]
@@ -133,12 +135,10 @@ for class_str in categories:
     annotated_byclass[class_str] = create_list_of_annotated_frames_by_class(region_attributes_metainfo, class_str)
     print(class_str, len(annotated_byclass[class_str]))
 
-print(annotated_byclass["pecking"]-annotated_byclass["shade"])
-print(annotated_byclass["shade"]-annotated_byclass["pecking"])
 
 #%% Save annotated filenames as csv.
 
 list_filenames_annotated = sorted((list(filenames_annotated)))
 
 df = pd.DataFrame(list_filenames_annotated, columns=["filename"])
-df.to_csv("~annotated_filenames.csv", index=False)
+df.to_csv("annotated_filenames.csv", index=False)
