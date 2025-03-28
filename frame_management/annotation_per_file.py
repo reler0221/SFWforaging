@@ -16,7 +16,6 @@ from annotation_functions import *
 
 #%% Set environment
 #os.chdir("/Users/hyewonjun/UZH/Thesis/")
-
 #%% Parameters
 folder_with_annotations = "/Volumes/T5 EVO/Foraging HD/only_annotated_frames" #/Users/hyewonjun/UZH/Thesis/annotations
 filetype = ".csv"
@@ -43,6 +42,7 @@ for filename in csv_paths:
     region_attributes_clean_df = make_clean_df(filename, file, colnames)
     region_attributes_clean_df = fill_region_att_and_errorcheck(file, categories, region_attributes_clean_df, response_type_yesno)
     region_attributes_metainfo = pd.concat([region_attributes_metainfo, region_attributes_clean_df], ignore_index=True)
+
 
 #%% pecking
 pecking_frames_lists = frames_bycol(region_attributes_clean_df, "pecking")
@@ -106,3 +106,16 @@ print(f"Shade: \nTotal Frames: {len(shade_all_frame_set)} \nY Frames: {len(shade
 
 print(f"Blue: \nTotal Frames: {len(blue_all_frame_set)} \nY Frames: {len(blue_y_frame_set)} \nN Frames: {len(blue_n_frame_set)} \nU Frames: {len(blue_u_frame_set)} \nTotal Regions: {len(blue_all_frames)} \nY Regions: {len(blue_y_frames)} \nN Regions: {len(blue_n_frames)} \nU Regions: {len(blue_u_frames)}\n")
 
+print("Regions without region attributes:", len(region_attributes_metainfo[
+    (region_attributes_metainfo["pecking"] == 0.0) &
+    (region_attributes_metainfo["shade"] == 0.0) &
+    (region_attributes_metainfo["blue"] == 0.0)
+    ])
+      )
+
+print("Frames without region attributes:", len(set(region_attributes_metainfo[
+    (region_attributes_metainfo["pecking"] == 0.0) &
+    (region_attributes_metainfo["shade"] == 0.0) &
+    (region_attributes_metainfo["blue"] == 0.0)
+    ]["filename"]))
+      )

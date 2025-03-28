@@ -55,6 +55,7 @@ isolated_df = isolated_df[isolated_df.ne(0.0).all(axis=1)]
 #%%Check all response types
 response_types = isolated_df[categories].stack().value_counts()
 #%% Co_occurrence pairwise
+
 co_pecking_shade = pd.crosstab(isolated_df["pecking"], isolated_df["shade"])
 co_pecking_blue = pd.crosstab(isolated_df["pecking"], isolated_df["blue"])
 co_shade_blue = pd.crosstab(isolated_df["shade"], isolated_df["blue"])
