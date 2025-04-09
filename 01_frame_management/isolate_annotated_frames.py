@@ -20,7 +20,7 @@ for root, _, files in os.walk(main_directory_frames):
             source_path = os.path.join(root, file)
             destination_path = os.path.join(destination_directory, file)
             shutil.copy2(source_path, destination_path)  # Preserves metadata
-            print(f"Copied: {source_path} -> {destination_path}")
+            print(f"Copied:  {source_path} -> {destination_path}")
 
 print("File copying completed.")
 
