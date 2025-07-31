@@ -11,7 +11,7 @@ import numpy as np
 
 #%% Load import files
 # Load all_annotations
-df_annotations = pd.read_csv("/Volumes/T5 EVO/Foraging HD/Isolated_frames/revised_3425.csv")
+df_annotations = pd.read_csv("/Volumes/T5 EVO/Foraging HD/Isolated_frames/total_input.csv")
 print(len(df_annotations))
 
 
@@ -46,7 +46,7 @@ annotations_validation = df_annotations[slice_videoname.isin(validation_videos)]
 
 print("validation images: ", len(annotations_validation)) # looks good
 
-annotations_training = df_annotations[~df_annotations['#filename'].isin(annotations_validation)]
+annotations_training = df_annotations[~df_annotations['#filename'].isin(annotations_validation["#filename"])]
 #print(annotations_training)
 print("training images: ", len(annotations_training)) # looks good
 
@@ -55,7 +55,7 @@ print("training images: ", len(annotations_training)) # looks good
 #%% directories to export
 import_images_dir="/Volumes/T5 EVO/Foraging HD/Isolated_frames/annotated_frames"
 background_images_dir="/Volumes/T5 EVO/Foraging HD/Isolated_frames/background_frames"
-export_dir="/Volumes/T5 EVO/Foraging HD/YOLO_model_input/05_Birds_background_ver2"
+export_dir="/Volumes/T5 EVO/Foraging HD/YOLO_model_input/14_Birds_background_extra"
 # define subdirectory if it doesn't exist
 os.makedirs(os.path.join(export_dir + "/labels/val"), exist_ok=True)
 os.makedirs(os.path.join(export_dir + "/images/val"), exist_ok=True)

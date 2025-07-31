@@ -13,11 +13,10 @@ import re
 import numpy as np
 import csv
 from annotation_functions import *
-
 #%% Set environment
 #os.chdir("/Users/hyewonjun/UZH/Thesis/")
 #%% Parameters
-folder_with_annotations = "/Volumes/T5 EVO/Foraging HD/only_annotated_frames" #/Users/hyewonjun/UZH/Thesis/annotations
+folder_with_annotations = "/Volumes/T5 EVO/Foraging HD/Isolated_frames/annotated_frames" #/Users/hyewonjun/UZH/Thesis/annotations
 filetype = ".csv"
 categories = sorted(["pecking", "shade", "blue"])
 colnames = ["filename", "batch", "error", "region_count"] + categories
@@ -29,6 +28,7 @@ total_frames = 0
 total_annotated_frames = 0
 region_attributes_metainfo = pd.DataFrame(columns=colnames)
 errors = []
+
 
 
 #%% Get dataframe

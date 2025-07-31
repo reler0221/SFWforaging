@@ -42,7 +42,6 @@ video_framecount_df = pd.DataFrame({
     "Frames_per_video": [frames_per_video_dict[videoname] for videoname in sorted_keys]
 })
 
-
 #%% 4. Check -- Looks good(equal to the sums calculated in the first section)
 print(sum(video_framecount_df["Frames_per_video"]))
 print(sum(video_framecount_df["Birds_per_video"]))
